@@ -19,7 +19,7 @@ const axios = require('axios')
 const { File } = require('megajs')
 const prefix = '.'
 
-const ownerNumber = ['94779415698']
+const ownerNumber = ['94742349884']
 
 //===================SESSION-AUTH============================
 if (!fs.existsSync(__dirname + '/auth_info_baileys/creds.json')) {
@@ -81,7 +81,11 @@ conn.ev.on('messages.upsert', async(mek) => {
 mek = mek.messages[0]
 if (!mek.message) return	
 mek.message = (getContentType(mek.message) === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
-if (mek.key && mek.key.remoteJid === 'status@broadcast') return
+if (mek.key && mek.key.remoteJid === 'status@broadcast' && config.AUTO_READ_STATUS === "true" ){
+
+await conn.readMessages([mek.key])
+
+}
 const m = sms(conn, mek)
 const type = getContentType(mek.message)
 const content = JSON.stringify(mek.message)
